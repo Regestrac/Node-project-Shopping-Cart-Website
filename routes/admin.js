@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET home page. */
+/* GET users listing. */
 router.get('/', function(req, res, next) {
   let products=[
     {
@@ -29,7 +29,14 @@ router.get('/', function(req, res, next) {
       image:"https://www.trustedreviews.com/wp-content/uploads/sites/54/2022/03/Samsung-Galaxy-S22-Plus-home-screen-4-scaled.jpg"
     }
   ]
-  res.render('index', { products, admin:true });
+  res.render('admin/view-products',{admin:true, products});
 });
+router.get('/add-product', (req,res) => {
+  res.render('admin/add-product')
+})
+router.post('/add-product',(req,res) => {
+  console.log(req.body);
+  console.log(req.files.Image)
+})
 
 module.exports = router;
