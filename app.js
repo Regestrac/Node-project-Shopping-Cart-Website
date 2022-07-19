@@ -6,27 +6,36 @@ var logger = require('morgan');
 var hbs = require('express-handlebars')
 var userRouter = require('./routes/user');
 var adminRouter = require('./routes/admin');
-var fileUpload = require('express-fileupload');
-var app = express();
+var fileUpload = require('express-fileupload'); 
+
 var db = require('./config/connection');
+var session = require('express-session');
+
+var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
-app.engine('hbs', hbs.engine({extname:'hbs', defaultLayout: 'layout', layoutsDir:__dirname + '/views/layout', partialsDir:__dirname + '/views/partials/'}))
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(fileUpload({limits: { fileSize: 50 * 1024 * 1024 },}));
 
-db.connect((err) => {
+// engine setup to view the layouts from layout and partials folder
+app.engine('hbs', hbs.engine({extname:'hbs', defaultLayout: 'layout', layoutsDir:__dirname + '/views/layout', partialsDir:__dirname + '/views/partials/'}));
+
+app.use(fileUpload({limits: { fileSize: 50 * 1024 * 1024 },})); //middleware for uploading files with or without limited size
+app.use(session({secret:"Key",cookie:{maxAge:600000}}));        // Setting timed cookie sessions
+
+db.connect((err) => {                   //show database connection to port status in console
   if(err) console.log("Connection Error"+err);
   else console.log("Database connected to port 27017");
 });
-app.use('/', userRouter);
-app.use('/admin', adminRouter);
+
+app.use('/', userRouter);    //executes the user middleware when it received a reques with url that starts with the given path (user.js file from routes folder)
+app.use('/admin', adminRouter);   //executes the admin middleware (admin.js file from routes folder) 
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -44,4 +53,4 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+module.exports = app;  //tells Node.js which bit of code to export from a given file so other files are allowed to access the exported code

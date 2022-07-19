@@ -1,7 +1,8 @@
+<!-- Shows the details of products added to database as table in the Admin Pannel -->
 <section>
     <div class="container">
         <div class="row mt-4">
-            <a href="/admin/add-product" class="btn btn-success ml-auto">Add Product</a>
+            <a href="/admin/add-product" class="btn btn-success ml-auto">Add New Product</a> <!-- Button to add new productsto database -->
         </div>
         <table class="table mt-5">
             <thead>
@@ -16,11 +17,11 @@
             <tbody>
                 {{#each products}}
                 <tr>
-                    <th scope="row">1</th>
+                    <th scope="row">{{@index}}</th>
                     <td>{{this.Name}}</td>
                     <td>{{this.Category}}</td>
                     <td>{{this.Description}}</td>
-                    <td><img  style="width:100px" src="/product-images/{{this._id}}.png" alt="Img"></td>
+                    <td><img  style="width:100px" src="/product-images/{{this._id}}.png" alt="Img"></td> {{!-- Saves image name ad the collection id --}}
                 </tr>
                 {{/each}}
             </tbody>

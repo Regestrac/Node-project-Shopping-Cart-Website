@@ -12,9 +12,9 @@
   </head>
   <body>
     {{#if admin}}
-    {{>admin-header}}
+    {{>admin-header}} <!-- Shows admin pannel (admin-header file from partials) -->
     {{else}}
-    {{>user-header}}
+    {{>user-header}} <!-- Shows user login page (user-header file from partials) -->
     {{/if}}
     
     {{{body}}}
