@@ -14,7 +14,7 @@ router.get('/', function(req, res, next) {
 });
 router.get('/add-product', (req,res) => {  //when Add New Product is clicked from admin pannel
   res.render('admin/add-product')          // a form to add new product is shown
-})
+});
 router.post('/add-product',(req,res) => { //when new product is added to DB the following functions are executed
   console.log(req.body);                  //the data from the form is printed to console
   console.log(req.files.Image)            //printing data of image 
@@ -29,5 +29,16 @@ router.post('/add-product',(req,res) => { //when new product is added to DB the 
       }
     }) ;
   });
+});
+/* To delete a product from admin pannel */
+router.get('/delete-product/', (req,res) => {   //passing the id
+  let proId = req.query.id           
+  console.log(proId);
+  productHelpers.deleteProduct(proId).then((response) => {
+    res.redirect('/admin/')
+  })
+});
+router.get('/edit-product/', (req,res) => {
+
 })
 module.exports = router;

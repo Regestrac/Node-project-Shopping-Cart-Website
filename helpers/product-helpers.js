@@ -1,5 +1,6 @@
 var db= require('../config/connection');
 var collection = require('../config/collections');
+var objectId=require('mongodb').ObjectId;
 module.exports = {
     addProduct:(product,callback) => {
         console.log(product);
@@ -11,8 +12,16 @@ module.exports = {
     },
     getAllProducts:() => {
         return new Promise(async(resolve,reject) => {
-            let products =await db.get().collection(collection.PRODUCT_COLLECTION).find().toArray()   //getting the data from the DB of the given collection
+            let products =await db.get().collection(collection.PRODUCT_COLLECTION).find().toArray();   //getting the data from the DB of the given collection
             resolve(products)                      //this helps to view all products for the admin
+        })
+    },
+    deleteProduct:(proId) => {
+        console.log(objectId(proId))
+        return new Promise((resolve,reject) => {
+            db.get().collection(collection.PRODUCT_COLLECTION).deleteOne({_id:objectId(proId)}).then((response) => {
+                resolve(response);
+            })
         })
     }
 }
