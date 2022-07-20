@@ -38,8 +38,10 @@ router.get('/signup',(req,res) => {
 /*POST signup */
 router.post('/signup', (req,res) => {
   userHelpers.doSignup(req.body).then((response) => {        //passes the signup data to doSignup, defined in 'user-helper.js' file
+    req.session.loggedin=true;
+    req.session.user=response.user;
     console.log(response);
-    res.redirect('/login');       //redirect to login page after signup
+    res.redirect('/');       //redirect to home page after signup
   });
 });
 /* POST login */
@@ -63,8 +65,17 @@ router.get('/logout', (req,res) => {
   res.redirect('/');             // then it will redirect to homepage for guests (without active session)
 });
 /* GET cart page */
-router.get('/cart',verifyLogin, (req,res) => {
-  res.render('user/cart');
+router.get('/cart',verifyLogin, async(req,res) => {
+  let products= await userHelpers.getCartProducts(req.session.user._id).then((products)=>{  //get id of products in cart from DB
+    console.log(products);
+    res.render('user/cart',{products,user:req.session.user});                               //loads cart page
+  })
 });
+/* Adds products to cart */
+router.get('/add-to-cart/:id',verifyLogin, (req,res)=> {                       
+  userHelpers.addToCart(req.params.id, req.session.user._id).then(()=>{         //passes id of products added to cart
+    res.redirect('/')
+  })
+})
 
 module.exports = router;

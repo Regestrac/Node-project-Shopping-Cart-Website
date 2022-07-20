@@ -1,1 +1,26 @@
-<h2>Cart is Empty</h2>
+{{!-- Shows products in cart for User as a table--}}
+<section>
+    <div class="container">
+        <table class="table mt-5">
+            <thead>
+                <tr>
+                    <th scope="col">Item</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each products}}
+                <tr>
+                    <td><img src="/product-images/{{this._id}}.png" style="width:100px; height:100px" alt=""></td>
+                    <td>{{this.Name}}</td>
+                    <td>
+                        <button class="cart-item-count m-3">-</button>2<button class="cart-item-count m-3">+</button>
+                    </td>
+                    <td><a href="#" class="btn btn-danger">Remove</a></td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</section>

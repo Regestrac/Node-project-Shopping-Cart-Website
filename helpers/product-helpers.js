@@ -19,14 +19,14 @@ module.exports = {
     },
     deleteProduct:(proId) => {
         console.log(objectId(proId))
-        return new Promise((resolve,reject) => {
+        return new Promise((resolve,reject) => {           /* Helps to delete a product detail from database */
             db.get().collection(collection.PRODUCT_COLLECTION).deleteOne({_id:objectId(proId)}).then((response) => {
                 resolve(response);
             })
         })
     },
     getProductDetails:(proId) => {
-        return new Promise((resolve,reject) => {
+        return new Promise((resolve,reject) => {             /* Hepls to get the data of selected product id */
             db.get().collection(collection.PRODUCT_COLLECTION).findOne({_id:objectId(proId)}).then((product) => {
                 console.log(objectId(proId));
                 resolve(product);
@@ -34,7 +34,7 @@ module.exports = {
         })
     },
     updateProduct:(proId,proDetails) => {
-        return new Promise((resolve,reject) => {
+        return new Promise((resolve,reject) => {           /*  Helps to update data in database */
             db.get().collection(collection.PRODUCT_COLLECTION).updateOne({_id:objectId(proId)},{
                 $set: {
                     Name:proDetails.Name,

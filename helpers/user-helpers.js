@@ -1,5 +1,6 @@
 var db= require('../config/connection');
 var collection = require('../config/collections');
+var objectId=require('mongodb').ObjectId;
 
 const bcrypt = require('bcrypt');    //password hashing function
 
@@ -35,6 +36,54 @@ module.exports = {
                 console.log("Login Failed");     //if no email found in DB then the login fails 
                 resolve({status:false});         //login status is set to false and returned to doLogin in 'user.js' file in routes folder
             }
+        })
+    },
+    addToCart:(proId,userId) => {
+        return new Promise(async(resolve,reject)=>{
+            let userCart=await db.get().collection(collection.CART_COLLECTION).findOne({user:objectId(userId)})  //checks if collection already exists
+            if(userCart){
+                db.get().collection(collection.CART_COLLECTION).updateOne({user:objectId(userId)},
+                    {
+                        $push:{products:objectId(proId)}       /* Pushes product to cart in DB  */
+                    }
+                ).then((response)=>{
+                    resolve();
+                })
+            }else{
+                let cartObj = {
+                    user:objectId(userId),
+                    products:[objectId(proId)]
+                }                                                    /* new collection created for cart if not already exist */
+                db.get().collection(collection.CART_COLLECTION).insertOne(cartObj).then((response)=>{     
+                    resolve();
+                })
+            }
+        })
+    },
+    getCartProducts:(userId)=>{              /* Get details of products in a user's cart collection in databade */
+        return new Promise(async(resolve,reject) =>{
+            let cartItems=await db.get().collection(collection.CART_COLLECTION).aggregate([
+                {
+                    $match:{user:objectId(userId)}
+                },
+                {
+                    $lookup:{
+                        from:collection.PRODUCT_COLLECTION,
+                        let:{prodList:'$products'},
+                        pipeline:[
+                            {
+                                $match:{
+                                    $expr:{
+                                        $in:['$_id',"$$prodList"]
+                                    }
+                                }
+                            }
+                        ],
+                        as:'cartItems'
+                    }
+                }
+            ]).toArray()
+            resolve(cartItems[0].cartItems)  //passes the data to products of getCartProducts in user.js
         })
     }
     
