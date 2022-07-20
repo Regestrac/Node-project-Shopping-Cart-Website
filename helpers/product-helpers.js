@@ -1,5 +1,6 @@
 var db= require('../config/connection');
 var collection = require('../config/collections');
+const { resolve } = require('express-hbs/lib/resolver');
 var objectId=require('mongodb').ObjectId;
 module.exports = {
     addProduct:(product,callback) => {
@@ -23,5 +24,27 @@ module.exports = {
                 resolve(response);
             })
         })
+    },
+    getProductDetails:(proId) => {
+        return new Promise((resolve,reject) => {
+            db.get().collection(collection.PRODUCT_COLLECTION).findOne({_id:objectId(proId)}).then((product) => {
+                console.log(objectId(proId));
+                resolve(product);
+            })
+        })
+    },
+    updateProduct:(proId,proDetails) => {
+        return new Promise((resolve,reject) => {
+            db.get().collection(collection.PRODUCT_COLLECTION).updateOne({_id:objectId(proId)},{
+                $set: {
+                    Name:proDetails.Name,
+                    Category:proDetails.Category,
+                    Price:proDetails.Price,
+                    Description:proDetails.Description
+                }
+            }).then((response) => {
+                resolve();
+            })
+        });
     }
 }
