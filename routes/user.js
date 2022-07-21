@@ -13,11 +13,14 @@ const verifyLogin = (req,res,next) => {
 };
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/',async(req, res, next) =>{
   let user=req.session.user;    //checks session status of user
-  console.log(user)    //prints user data to console
+  let cartCount=null;
+  if(req.session.user) {
+    cartCount=await userHelpers.getCartCount(req.session.user._id);
+  }
   productHelpers.getAllProducts().then((products) => {
-    res.render('user/view-products',{products, user});   //shows products page for user , 
+    res.render('user/view-products',{products, user, cartCount});   //shows products page for user , 
   })
 });
 /* GET login page */
@@ -67,15 +70,19 @@ router.get('/logout', (req,res) => {
 /* GET cart page */
 router.get('/cart',verifyLogin, async(req,res) => {
   let products= await userHelpers.getCartProducts(req.session.user._id).then((products)=>{  //get id of products in cart from DB
-    console.log(products);
     res.render('user/cart',{products,user:req.session.user});                               //loads cart page
   })
 });
 /* Adds products to cart */
-router.get('/add-to-cart/:id',verifyLogin, (req,res)=> {                       
+router.get('/add-to-cart/:id', (req,res)=> {
   userHelpers.addToCart(req.params.id, req.session.user._id).then(()=>{         //passes id of products added to cart
-    res.redirect('/')
+    
   })
-})
+});
+router.post('/change-product-quantity', (req,res)=> {
+  userHelpers.changeProductQuantity(req.body).then(()=>{
+    
+  })
+});
 
 module.exports = router;
