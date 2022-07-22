@@ -4,6 +4,7 @@ const { resolve } = require('express-hbs/lib/resolver');
 var objectId=require('mongodb').ObjectId;
 module.exports = {
     addProduct:(product,callback) => {
+        product.Price=parseInt(product.Price);
         console.log(product);
         db.get().collection('product').insertOne(product).then((data) => {         //inserting the data to the DB in the given collection
             console.log(data);

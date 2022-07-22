@@ -7,7 +7,7 @@
                     <th scope="col">Item</th>
                     <th scope="col">Title</th>
                     <th scope="col">Quantity</th>
-                    <th scope="col"></th>
+                    <th scope="col">Price</th>
                 </tr>
             </thead>
             <tbody>
@@ -20,11 +20,17 @@
                     <td>
                         <button class="cart-item-count m-3" onclick="changeQuantity('{{this._id}}','{{this.product._id}}',-1) ">-</button> <span id="{{this.product._id}}"> {{this.quantity}} </span> <button class="cart-item-count m-3" onclick="changeQuantity('{{this._id}}','{{this.product._id}}',1)">+</button>
                     </td>
+                    <td>₹ {{this.product.Price}}</td>
                     <td><a href="#" class="btn btn-danger">Remove</a></td>
                 </tr>
                 {{/each}}
             </tbody>
         </table>
+        <hr><hr>
+        <div class="float-right pr-5">
+            <h5 class="float-left mr-5">Total:10000</h5><br>
+            <a href="/place-order" class="btn btn-success mt-3" style="width:100%;">Place Order</a>
+        </div>
     </div>
 </section>
 

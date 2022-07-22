@@ -107,8 +107,6 @@ module.exports = {
                     }
                 }
             ]).toArray()
-            
-            console.log(cartItems);
             resolve(cartItems);
         })
     },
@@ -146,6 +144,45 @@ module.exports = {
                     resolve(true);
                 })
             }
+        })
+    },
+    getTotalAmount:(userId)=>{
+        return new Promise(async(resolve,reject) =>{
+            let total=await db.get().collection(collection.CART_COLLECTION).aggregate([
+                {
+                    $match:{user:objectId(userId)}
+                },
+                {
+                    $unwind:'$products'
+                },
+                {
+                    $project:{
+                        items:'$products.item',
+                        quantity:'$products.quantity'
+                    }
+                },
+                {
+                    $lookup:{
+                        from:PRODUCT_COLLECTION,
+                        localField:'items',
+                        foreignField:'_id',
+                        as:'product'
+                    }
+                },
+                {
+                    $project:{
+                        item:1,quantity:1,product:{$arrayElemAt:['$product', 0]}
+                    }
+                },
+                {
+                    $group:{
+                        _id:null,
+                        total:{$sum:{$multiply:['$quantity','$product.Price']}}
+                    }
+                }
+            ]).toArray()
+            console.log(total);
+            resolve(total);
         })
     }
     
