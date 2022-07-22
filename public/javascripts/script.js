@@ -5,10 +5,10 @@ function addToCart(proId) {
         success: (response) => {
             if(response.status){
                 let count=$('#cart-count').html()
-                count=parseInt(counr)+1
+                count=parseInt(count)+1
                 $("#cart-count").html(count)
             }
-            alert(response)
+            alert("Item added to cart")
         }
     })
 }

@@ -70,18 +70,18 @@ router.get('/logout', (req,res) => {
 /* GET cart page */
 router.get('/cart',verifyLogin, async(req,res) => {
   let products= await userHelpers.getCartProducts(req.session.user._id).then((products)=>{  //get id of products in cart from DB
-    res.render('user/cart',{products,user:req.session.user});                               //loads cart page
+    res.render('user/cart',{products ,user:req.session.user});                               //loads cart page
   })
 });
 /* Adds products to cart */
 router.get('/add-to-cart/:id', (req,res)=> {
   userHelpers.addToCart(req.params.id, req.session.user._id).then(()=>{         //passes id of products added to cart
-    
+    res.json({status:true});
   })
 });
-router.post('/change-product-quantity', (req,res)=> {
-  userHelpers.changeProductQuantity(req.body).then(()=>{
-    
+router.post('/change-product-quantity', (req,res,next)=> {
+  userHelpers.changeProductQuantity(req.body).then((response)=>{
+    res.json(response);
   })
 });
 
