@@ -69,9 +69,9 @@ router.get('/logout', (req,res) => {
 });
 /* GET cart page */
 router.get('/cart',verifyLogin, async(req,res) => {
-  let products= await userHelpers.getCartProducts(req.session.user._id).then((products)=>{  //get id of products in cart from DB
-    res.render('user/cart',{products ,user:req.session.user});                               //loads cart page
-  })
+  let products= await userHelpers.getCartProducts(req.session.user._id)  //get id of products in cart from DB
+  let totalAmount= await userHelpers.getTotalAmount(req.session.user._id)
+  res.render('user/cart',{products ,user:req.session.user._id,totalAmount});                               //loads cart page
 });
 /* Adds products to cart */
 router.get('/add-to-cart/:id', (req,res)=> {
@@ -80,13 +80,29 @@ router.get('/add-to-cart/:id', (req,res)=> {
   })
 });
 router.post('/change-product-quantity', (req,res,next)=> {
-  userHelpers.changeProductQuantity(req.body).then((response)=>{
+  userHelpers.changeProductQuantity(req.body).then(async(response)=>{
+    response.total= await userHelpers.getTotalAmount(req.session.user._id)
     res.json(response);
   })
 });
 router.get('/place-order', verifyLogin ,async(req,res)=>{
-  let total= await userHelpers.getTotalAmount(req.session.user._id)
-  res.render('user/place-order', {user:req.session.user});
+  let total= await userHelpers.getTotalAmount(req.session.user._id);
+  res.render('user/place-order', {total, user:req.session.user});
+});
+router.post('/place-order',async(req,res)=>{
+  let products=await userHelpers.getCartProductList(req.body.userId);
+  let totalPrice=await userHelpers.getTotalAmount(req.body.userId);
+userHelpers.placeOrder(req.body,products,totalPrice).then((response)=>{
+  res.json({status:true})
 })
+  console.log(req.body);
+});
+router.get('/order-success',verifyLogin, (req,res)=>{
+  res.render('user/order-success',{user:req.session.user});
+});
+router.get('/view-orders',verifyLogin, async(req,res)=>{
+  //let products= await userHelpers.getOrderProducts(req.session.user._id)
+  res.render('user/view-orders',{/*products,*/user:req.session.user});
+});
 
 module.exports = router;

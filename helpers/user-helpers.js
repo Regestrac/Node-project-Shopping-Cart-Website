@@ -5,6 +5,8 @@ var objectId=require('mongodb').ObjectId;
 const bcrypt = require('bcrypt');    //password hashing function
 const { PRODUCT_COLLECTION } = require('../config/collections');
 const { CART_COLLECTION } = require('../config/collections');
+const { resolve } = require('express-hbs/lib/resolver');
+const { response } = require('../app');
 
 module.exports = {
     doSignup:(userData) => {            //getting data from signup form
@@ -141,12 +143,12 @@ module.exports = {
                     $inc:{'products.$.quantity':details.count}
                 }
                 ).then((response)=>{
-                    resolve(true);
+                    resolve({status:true});
                 })
             }
         })
     },
-    getTotalAmount:(userId)=>{
+    getTotalAmount:async(userId,proId)=>{
         return new Promise(async(resolve,reject) =>{
             let total=await db.get().collection(collection.CART_COLLECTION).aggregate([
                 {
@@ -181,9 +183,75 @@ module.exports = {
                     }
                 }
             ]).toArray()
-            console.log(total);
-            resolve(total);
+            resolve(total[0].total);
         })
+    },
+    placeOrder:(order,products,total)=>{
+        return new Promise((resolve,reject)=>{
+            console.log(order,products,total);
+            let status=order['payment-method']==='COD'?'Placed':'Pending'
+            let orderObj={
+                deliveryDetails:{
+                    phone:order.phone,
+                    address:order.address,
+                    pincode:order.pincode
+                },
+                userId:objectId(order.userId),
+                paymentMethod:order['payment-method'],
+                products:products,
+                totalAmound:total,
+                status:status,
+                date:new Date()
+            }
+            db.get().collection(collection.ORDER_COLLECTION).insertOne(orderObj).then((response)=>{
+                db.get().collection(collection.CART_COLLECTION).deleteOne({user:objectId(order.userId)});
+                resolve()
+            })
+        })
+    },
+    getCartProductList:(userId)=>{
+        return new Promise(async(resolve,reject)=>{
+            let cart= await db.get().collection(collection.CART_COLLECTION).findOne({user:objectId(userId)})
+            resolve(cart.products);
+        })
+    // },
+    // getOrderProducts:(userid)=>{            
+    //     return new Promise(async(resolve,reject) =>{
+    //         let orderItems=await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+    //             {
+    //                 $match:{userId:objectId(userid)}
+    //             },
+    //             {
+    //                 $unwind:'$products'
+    //             },
+    //             {
+    //                 $project:{
+    //                     items:'$products.item',
+    //                     quantity:'$products.quantity'
+    //                 }
+    //             },
+    //             {
+    //                 $lookup:{
+    //                     from:PRODUCT_COLLECTION,
+    //                     localField:'item',
+    //                     foreignField:'_id',
+    //                     as:'order'
+    //                 }
+    //             },
+    //             {
+    //                 $project:{
+    //                     item:1,quantity:1,order:{$arrayElemAt:['$order', 0]}
+    //                 }
+    //             },
+    //             {
+    //                 $project:{
+    //                     order:'$order'
+    //                 }
+    //             }
+    //         ]).toArray()
+    //         console.log("******"+orderItems);
+    //         resolve(orderItems);
+    //     })
     }
     
 }
