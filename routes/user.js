@@ -95,14 +95,17 @@ router.post('/place-order',async(req,res)=>{
 userHelpers.placeOrder(req.body,products,totalPrice).then((response)=>{
   res.json({status:true})
 })
-  console.log(req.body);
 });
 router.get('/order-success',verifyLogin, (req,res)=>{
   res.render('user/order-success',{user:req.session.user});
 });
-router.get('/view-orders',verifyLogin, async(req,res)=>{
-  //let products= await userHelpers.getOrderProducts(req.session.user._id)
-  res.render('user/view-orders',{/*products,*/user:req.session.user});
+router.get('/orders',verifyLogin,async(req,res)=>{
+  let orders=await userHelpers.getUserOrder(req.session.user._id);
+  res.render('user/orders',{orders,user:req.session.user});
+});
+router.get('/view-order-products/:id',verifyLogin, async(req,res)=>{
+  let products=await userHelpers.getOrderProducts(req.params.id);
+  res.render('user/view-order-products',{user:req.session.user, products});
 });
 
 module.exports = router;
