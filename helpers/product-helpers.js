@@ -34,7 +34,7 @@ module.exports = {
             })
         })
     },
-    updateProduct:(proId,proDetails) => {
+    updateProduct:(proId,proDetails,total) => {
         return new Promise((resolve,reject) => {           /*  Helps to update data in database */
             db.get().collection(collection.PRODUCT_COLLECTION).updateOne({_id:objectId(proId)},{
                 $set: {
