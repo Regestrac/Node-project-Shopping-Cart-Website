@@ -17,7 +17,7 @@
                     <td><img src="/product-images/{{this.product._id}}.png" style="width:100px; height:100px" alt=""></td>
                     <td>{{this.product.Name}}</td>
                     
-                    <td>
+                    <td>             <!-- Button to change the quantity of products in the cart & displays the quantity in center -->
                         <button class="cart-item-count m-3" onclick="changeQuantity('{{this._id}}','{{this.product._id}}','{{../user}}',-1)">-</button>
                          <span id="{{this.product._id}}"> {{this.quantity}} </span>  
                         <button class="cart-item-count m-3" onclick="changeQuantity('{{this._id}}','{{this.product._id}}','{{../user}}',1)">+</button>
@@ -31,7 +31,7 @@
         <hr><hr>
         <div class="float-right pr-5">
             <h5 class="float-left mr-5">Total:₹<span id="total">{{totalAmount}}</span></h5><br>
-            <a href="/place-order" class="btn btn-success mt-3" style="width:100%;">Place Order</a>
+            <a href="/place-order" class="btn btn-success mt-3" style="width:100%;">Place Order</a> {{!-- button to place order --}}
         </div>
     </div>
 </section>
@@ -41,7 +41,7 @@
         let quantity=parseInt(document.getElementById(proId).innerHTML);
         count=parseInt(count);
         $.ajax({
-            url:'/change-product-quantity',
+            url:'/change-product-quantity',          //using ajax to change a specific part without refreshing the page
             data:{
                 user:userId,
                 cart:cartId,
@@ -55,8 +55,8 @@
                     alert("Product removed form cart!");
                     location.reload();
                 }else{
-                    document.getElementById(proId).innerHTML=quantity+count;
-                    document.getElementById('total').innerHTML=response.total;
+                    document.getElementById(proId).innerHTML=quantity+count;    //changes the quantity of product
+                    document.getElementById('total').innerHTML=response.total;  //changes the total value as product quantity changes
                 }
             }
         })  

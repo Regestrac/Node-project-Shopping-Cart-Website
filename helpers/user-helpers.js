@@ -115,10 +115,10 @@ module.exports = {
                     }
                 }
             ]).toArray()
-            resolve(cartItems);
+            resolve(cartItems);    //resolves data of cart items as array
         })
     },
-    getCartCount: (userId) => {
+    getCartCount: (userId) => {    /* fetches the quantity of each product added in cart from database */
         return new Promise(async (resolve, reject) => {
             let cart = await db.get().collection(collection.CART_COLLECTION).findOne({ user: objectId(userId) })
 
@@ -131,11 +131,12 @@ module.exports = {
             resolve(count)
         })
     },
-    changeProductQuantity: (details) => {
-        details.count = parseInt(details.count);
+    /* Changes the quantity of products in database when changed in cart */
+    changeProductQuantity: (details) => {    
+        details.count = parseInt(details.count);   //count received in str converted to int
         details.quantity = parseInt(details.quantity);
         return new Promise((resolve, reject) => {
-            if (details.count == -1 && details.quantity == 1) {
+            if (details.count == -1 && details.quantity == 1) {  //count -1 means no matching product in cart 
                 db.get().collection(collection.CART_COLLECTION).updateOne({ _id: objectId(details.cart) },
                     {
                         $pull: { products: { item: objectId(details.product) } }
@@ -154,6 +155,7 @@ module.exports = {
             }
         })
     },
+    /* helps to find the total price of all products in cart */
     getTotalAmount: async (userId, proId) => {
         return new Promise(async (resolve, reject) => {
             let total = await db.get().collection(collection.CART_COLLECTION).aggregate([
@@ -193,9 +195,9 @@ module.exports = {
             resolve(total);
         })
     },
-    placeOrder: (order, products, total) => {
+    placeOrder: (order, products, total) => {  /*  */
         return new Promise((resolve, reject) => {
-            let status = order['payment-method'] === 'COD' ? 'Placed' : 'Pending'
+            let status = order['payment-method'] === 'COD' ? 'Placed' : 'Pending'   //sets the order status according to type of payment method
             let orderObj = {
                 deliveryDetails: {
                     phone: order.phone,
@@ -209,52 +211,52 @@ module.exports = {
                 status: status,
                 date: new Date()
             }
-            db.get().collection(collection.ORDER_COLLECTION).insertOne(orderObj).then((response) => {
-                db.get().collection(collection.CART_COLLECTION).deleteOne({ user: objectId(order.userId) })
+            db.get().collection(collection.ORDER_COLLECTION).insertOne(orderObj).then((response) => {      //new collection added to cart collection when an order is placed
+                db.get().collection(collection.CART_COLLECTION).deleteOne({ user: objectId(order.userId) })   //Deletes the produ7cts from cart when order is placed
                 response = response.insertedId.toString();
                 resolve(response)
 
             })
         })
     },
-    getCartProductList: (userId) => {
+    getCartProductList: (userId) => {   /* Helps to get the details of cart products from database */
         return new Promise(async (resolve, reject) => {
             let cart = await db.get().collection(collection.CART_COLLECTION).findOne({ user: objectId(userId) })
             resolve(cart.products);
         })
     },
-    getUserOrder: (userId) => {
+    getUserOrder: (userId) => {        /* Get the order histoy deatials from order collection */
         return new Promise(async (resolve, reject) => {
             let orders = await db.get().collection(collection.ORDER_COLLECTION).find({ userId: objectId(userId) }).toArray()
             console.log(orders);
             resolve(orders);
         })
     },
-    getOrderProducts: (orderId) => {
+    getOrderProducts: (orderId) => {    /* helps to display details of each orders */
         return new Promise(async (resolve, reject) => {
-            let orderItems = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+            let orderItems = await db.get().collection(collection.ORDER_COLLECTION).aggregate([  //aggregate from order collection
                 {
-                    $match: { _id: objectId(orderId) }
+                    $match: { _id: objectId(orderId) }      // matching done using id of order collection
                 },
                 {
-                    $unwind: '$products'
+                    $unwind: '$products'                   //unwinding the products object from it
                 },
                 {
                     $project: {
-                        items: '$products.item',
-                        quantity: '$products.quantity'
+                        items: '$products.item',           //projecting the items
+                        quantity: '$products.quantity'     //and quantity from it
                     }
                 },
                 {
                     $lookup: {
-                        from: PRODUCT_COLLECTION,
+                        from: PRODUCT_COLLECTION,          //looking up from the product collection for matching product details
                         localField: 'items',
                         foreignField: '_id',
-                        as: 'order'
+                        as: 'order'                       //saving the fetched details as order
                     }
                 },
                 {
-                    $project: {
+                    $project: {                       //again projecting the 1st index from order object array 
                         item: 1, quantity: 1, order: { $arrayElemAt: ['$order', 0] }
                     }
                 }
@@ -262,7 +264,7 @@ module.exports = {
             resolve(orderItems);
         })
     },
-    generateRazorpay: (orderId, total) => {
+    generateRazorpay: (orderId, total) => {       /* Generating a razorpay instance for online payment */
         return new Promise((resolve, reject) => {
             var options = {
                 amount: total * 100,
@@ -276,25 +278,26 @@ module.exports = {
             });
         })
     },
-    verifyPayment: (details) => {
+    verifyPayment: (details) => {     /* verifying the payment */
         return new Promise((resolve, reject) => {
-            const createHmac = require('crypto');
-            let hmac = createHmac('sha256', 'c4uOVdWCG0kr3P9OZbYi6DRP');
-            hmac.update(details['payment[razorpay_order_id]'] + '|' + details['payment[razorpay_payment_id]']);
-            hmac = hmac.digest('hex');
-            if (hmac == details['payment[razorpay_signature]']) {
-                resolve();
+            var crypto = require('crypto');      //importing inbuilt library
+            let hmac = crypto.createHmac('sha256', 'c4uOVdWCG0kr3P9OZbYi6DRP');     //creating hmac object with sha256 algorithm
+            hmac.update(details['payment[razorpay_order_id]'] + '|' + details['payment[razorpay_payment_id]']);     //updating it
+            hmac = hmac.digest('hex');                                              //converting the hash to hex format
+            console.log(hmac);
+            if (hmac == details['payment[razorpay_signature]']) {           //comparing it with razorpay signature with above hex
+                resolve();                           //resolves the payment as success if it matches
             } else {
-                reject();
+                reject();                            //rejects if does'nt match
             }
         })
     },
-    changePaymentStatus: (orderId) => {
+    changePaymentStatus: (orderId) => {            /* changing the order status of online payment to placed after succesfull payment */
         return new Promise((resolve, reject) => {
             db.get().collection(collection.ORDER_COLLECTION).updateOne({ _id: objectId(orderId) },
                 {
                     $set: {
-                        status: 'Placed'
+                        status: 'Placed'          //updating it in the order collecton
                     }
                 }).then(() => {
                     resolve()

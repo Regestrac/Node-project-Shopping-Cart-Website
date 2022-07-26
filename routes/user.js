@@ -82,54 +82,57 @@ router.get('/add-to-cart/:id', (req, res) => {
     res.json({ status: true });
   })
 });
-router.post('/change-product-quantity', (req, res, next) => {
+/* changes the quantity of products in cart database when the + or - key is pressed */
+router.post('/change-product-quantity', (req, res, next) => {  
   userHelpers.changeProductQuantity(req.body).then(async (response) => {
     response.total = await userHelpers.getTotalAmount(req.session.user._id)
     res.json(response);
   })
 });
+/* GET palce order page to fill delivery details */
 router.get('/place-order', verifyLogin, async (req, res) => {
   let products = await userHelpers.getCartProducts(req.session.user._id)
   let total=0;
   if(products.length>0){
-    total = await userHelpers.getTotalAmount(req.session.user._id);
+    total = await userHelpers.getTotalAmount(req.session.user._id);   //gets the total price of items checked out to delivery detail page
   }
-  res.render('user/place-order', { total, user: req.session.user });
+  res.render('user/place-order', { total, user: req.session.user });  //renders the page
 });
+/* POSt from place-order page */
 router.post('/place-order', async (req, res) => {
   let products = await userHelpers.getCartProductList(req.body.userId);
-  let totalPrice = await userHelpers.getTotalAmount(req.body.userId);
-  userHelpers.placeOrder(req.body, products, totalPrice).then((orderId) => {
-    if (req.body['payment-method'] == 'COD') {
-      res.json({ codSuccess: true });
-    } else {
-      userHelpers.generateRazorpay(orderId, totalPrice).then((response) => {
-        res.json(response);
-      })
-    }
-  })
+    let totalPrice = await userHelpers.getTotalAmount(req.body.userId);
+    userHelpers.placeOrder(req.body, products, totalPrice).then((orderId) => {
+      if (req.body['payment-method'] == 'COD') {                       //If the selected payment method is COD
+        res.json({ codSuccess: true });                                //then it returns true 
+      } else {
+        userHelpers.generateRazorpay(orderId, totalPrice).then((response) => {    //else it generates razorpay instance in serverside
+          res.json(response);
+        })
+      }
+    })
 });
-router.get('/order-success', verifyLogin, (req, res) => {
+router.get('/order-success', verifyLogin, (req, res) => {     //renders a page for succesfull checkout
   res.render('user/order-success', { user: req.session.user });
 });
-router.get('/orders', verifyLogin, async (req, res) => {
+router.get('/orders', verifyLogin, async (req, res) => {         //renders a page for viewing the order history
   let orders = await userHelpers.getUserOrder(req.session.user._id);
   res.render('user/orders', { orders, user: req.session.user });
 });
-router.get('/view-order-products/:id', verifyLogin, async (req, res) => {
+router.get('/view-order-products/:id', verifyLogin, async (req, res) => {    //displays the details of each order
   let products = await userHelpers.getOrderProducts(req.params.id);
   res.render('user/view-order-products', { user: req.session.user, products });
 });
-router.post('/verify-payment', (req, res) => {
+router.post('/verify-payment', (req, res) => {         //Verifies the onile payment status
   console.log(req.body)
-  userHelpers.verifyPayment(req.body).then(() => {
+  userHelpers.verifyPayment(req.body).then(() => {     //gives necessary feedback
     userHelpers.changePaymentStatus(req.body['order[receipt]']).then(() => {
-      console.log("Payment Successfull");
+      console.log("Payment Successfull");             
       res.json({ status: true })
     })
   }).catch((err) => {
-    console.log(err);
-    res.json({ status: false, errMsg: '' })
+    console.log(err);                    
+    res.json({ status: false, errMsg: '' })       //sends error message if payment fails
   })
 })
 

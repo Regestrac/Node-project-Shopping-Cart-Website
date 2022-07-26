@@ -1,3 +1,4 @@
+{{!-- Displays the order history as a table --}}
 <section>
     <div class="container">
         <div class="row">
@@ -25,9 +26,9 @@
                         <td>{{this.totalAmound}}</td>
                         <td>{{this.paymentMethod}}</td>
                         <td>{{this.status}}</td>
-                        <td>
+                        <td>                            {{!-- button to view the order detail fully --}}
                             <a href="/view-order-products/{{this._id}}" class="btn btn-info">View Details</a>
-                        </td>
+                        </td>                 
                         </tr>
                         {{/each}}
                     </tbody>
