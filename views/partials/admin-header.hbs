@@ -1,7 +1,7 @@
 {{!-- Shows the Admin Pannel --}}
 <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Admin Pannel</a>
+        <a class="navbar-brand" href="/admin">Admin Pannel</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -9,7 +9,7 @@
         <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
             <li class="nav-item active">
-                <a class="nav-link" href="/admin">All Products</a> <!-- Refreshes this page -->
+                <a class="nav-link" href="/admin/view-products">All Products</a> <!-- Refreshes this page -->
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">All Orders</a>
@@ -18,10 +18,24 @@
                 <a class="nav-link" href="#">All Users</a>
             </li>
             </ul>
-            <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
+                        {{#if admin}}
+                        Admin {{admin.Name}}
+                        {{else}}
+                        Admin
+                        {{/if}}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    {{#if admin}}
+                    <a class="dropdown-item" href="/admin/admin-login">Login</a>
+                    <a class="dropdown-item" href="/admin/admin-signup">Signup</a>
+                    <hr>
+                    <a class="dropdown-item" href="/admin/admin-logout">Logout</a>
+                    <hr>
+                    <a class="dropdown-item" href="/">User</a>
+                    {{/if}} 
+                </div>
         </div>
         </nav>
     </header>

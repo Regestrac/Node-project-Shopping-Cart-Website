@@ -29,10 +29,14 @@
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     {{#if user}}
+                        <a class="dropdown-item" href="#">Profile</a>
+                        <hr>
                         <a class="dropdown-item" href="/logout">Logout</a> <!-- Shows logout option if logged in -->
                     {{else}}
                         <a class="dropdown-item" href="/login">Login</a>
                         <a class="dropdown-item" href="/signup">Signup</a>
+                        <hr>
+                        <a class="dropdown-item" href="/admin">Admin</a>
                     {{/if}}
                 </div>
             </div>
