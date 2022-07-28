@@ -134,6 +134,11 @@ router.post('/verify-payment', (req, res) => {         //Verifies the onile paym
   }).catch((err) => {
     console.log(err);
     res.json({ status: false, errMsg: '' })       //sends error message if payment fails
+  });
+});
+router.get('/remove-cart-item/:id',(req,res)=>{
+  userHelpers.removeCartItem((req.params.id.split(','))).then((response)=>{
+    res.redirect('/cart')
   })
 })
 

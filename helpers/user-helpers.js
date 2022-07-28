@@ -303,6 +303,19 @@ module.exports = {
                     resolve()
                 })
         })
+    },
+    removeCartItem:(cart)=>{
+        return new Promise((resolve,reject)=>{
+            db.get().collection(collection.CART_COLLECTION).updateOne({_id:objectId(cart[0])},
+            {
+                $pull:{
+                    products:{
+                        item:objectId(cart[1])
+                    }
+                }
+            },false,true).then((response)=>{
+            resolve(response)
+            })
+        })  
     }
-
 }

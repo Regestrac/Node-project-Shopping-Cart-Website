@@ -1,7 +1,7 @@
 {{!-- Shows products in cart for User as a table--}}
 <section>
     <div class="container">
-        <table class="table mt-5">
+        <table class="table mt-5 table-bordered">
             <thead>
                 <tr>
                     <th scope="col">Item</th>
@@ -23,12 +23,12 @@
                         <button class="cart-item-count m-3" onclick="changeQuantity('{{this._id}}','{{this.product._id}}','{{../user}}',1)">+</button>
                     </td>
                     <td>₹ {{this.product.Price}}</td>
-                    <td><a href="#" class="btn btn-danger">Remove</a></td>
+                    <td><a href="/remove-cart-item/{{this._id}},{{this.product._id}}" class="btn btn-danger">Remove</a></td>
                 </tr>
                 {{/each}}
             </tbody>
         </table>
-        <hr><hr>
+        <hr style="height:1px; background: black;">
         <div class="float-right pr-5">
             <h5 class="float-left mr-5">Total:₹<span id="total">{{totalAmount}}</span></h5><br>
             <a href="/place-order" class="btn btn-success mt-3" style="width:100%;">Place Order</a> {{!-- button to place order --}}
