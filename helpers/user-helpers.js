@@ -191,8 +191,8 @@ module.exports = {
                     }
                 }
             ]).toArray()
-            total = total[0].total;
-            resolve(total);
+            total=total[0].total;
+               resolve(total); 
         })
     },
     placeOrder: (order, products, total) => {  /*  */
@@ -304,13 +304,13 @@ module.exports = {
                 })
         })
     },
-    removeCartItem:(cart)=>{
+    removeCartItem:(cart)=>{         //cart returns array of 2 strings with cart id and products id
         return new Promise((resolve,reject)=>{
-            db.get().collection(collection.CART_COLLECTION).updateOne({_id:objectId(cart[0])},
+            db.get().collection(collection.CART_COLLECTION).updateOne({_id:objectId(cart[0])},   //finding the cart with cart id
             {
                 $pull:{
-                    products:{
-                        item:objectId(cart[1])
+                    products:{                /* Removing the product item from the cart database */
+                        item:objectId(cart[1])       
                     }
                 }
             },false,true).then((response)=>{

@@ -69,7 +69,7 @@ router.get('/logout', (req, res) => {
   res.redirect('/');             // then it will redirect to homepage for guests (without active session)
 });
 /* GET cart page */
-router.get('/cart', verifyLogin, async (req, res) => {
+router.get('/cart',verifyLogin,  async (req, res) => {
   let products = await userHelpers.getCartProducts(req.session.user._id)  //get id of products in cart from DB
   let totalAmount = 0;
   if (products.length > 0) {
@@ -78,7 +78,7 @@ router.get('/cart', verifyLogin, async (req, res) => {
   res.render('user/cart', { products, user: req.session.user, totalAmount });       //loads cart page
 });
 /* Adds products to cart */
-router.get('/add-to-cart/:id', (req, res) => {
+router.get('/add-to-cart/:id',(req, res) => {
   userHelpers.addToCart(req.params.id, req.session.user._id).then(() => {         //passes id of products added to cart
     res.json({ status: true });
   })
@@ -136,8 +136,9 @@ router.post('/verify-payment', (req, res) => {         //Verifies the onile paym
     res.json({ status: false, errMsg: '' })       //sends error message if payment fails
   });
 });
+/* Remove button to remove a product from cart */
 router.get('/remove-cart-item/:id',(req,res)=>{
-  userHelpers.removeCartItem((req.params.id.split(','))).then((response)=>{
+  userHelpers.removeCartItem((req.params.id.split(','))).then((response)=>{  //req.params.id is converted to array
     res.redirect('/cart')
   })
 })

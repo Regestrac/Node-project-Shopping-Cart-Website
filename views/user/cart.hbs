@@ -2,15 +2,16 @@
 <section>
     <div class="container">
         <table class="table mt-5 table-bordered">
-            <thead>
+            <thead class="table-info" style="font-weight:bolder; font-size:larger">
                 <tr>
                     <th scope="col">Item</th>
                     <th scope="col">Title</th>
                     <th scope="col">Quantity</th>
                     <th scope="col">Price</th>
+                    <th>Option</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="table-primary" style="font-weight:bold;">
                 {{#each products}}
                 <tr>
                     
@@ -18,9 +19,9 @@
                     <td>{{this.product.Name}}</td>
                     
                     <td>             <!-- Button to change the quantity of products in the cart & displays the quantity in center -->
-                        <button class="cart-item-count m-3" onclick="changeQuantity('{{this._id}}','{{this.product._id}}','{{../user}}',-1)">-</button>
+                        <button class="cart-item-count m-3" style="height:1.7rem; width:1.7rem; font-weight: 900;" onclick="changeQuantity('{{this._id}}','{{this.product._id}}','{{../user}}',-1)">-</button>
                          <span id="{{this.product._id}}"> {{this.quantity}} </span>  
-                        <button class="cart-item-count m-3" onclick="changeQuantity('{{this._id}}','{{this.product._id}}','{{../user}}',1)">+</button>
+                        <button class="cart-item-count m-3" style="height:1.7rem; width:1.7rem; font-weight: 700;" onclick="changeQuantity('{{this._id}}','{{this.product._id}}','{{../user}}',1)">+</button>
                     </td>
                     <td>₹ {{this.product.Price}}</td>
                     <td><a href="/remove-cart-item/{{this._id}},{{this.product._id}}" class="btn btn-danger">Remove</a></td>

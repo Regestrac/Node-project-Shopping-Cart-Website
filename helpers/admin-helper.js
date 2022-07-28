@@ -35,7 +35,7 @@ module.exports={
                 })
             }
             else {
-                console.log("Login Failed");     //if no email found in DB then the login fails 
+                console.log("Login Failed");     //if no admin ID found in DB then the login fails 
                 resolve({ status: false });         //login status is set to false and returned to doLogin in 'admin.js' file in routes folder
             }
         })

@@ -1,20 +1,22 @@
 {{!-- Shows products as cards for User --}}
 <section>
     <div class="container mt-5">
-        <div class="row" >
-            {{#each products}}
-            <div class="m-1">
-                <div class="card" style="width: 15rem; Height: 23rem; text-align:center; display:inline-table">
-                    <img class="card-img-top" style="Height: 12rem;" src="/product-images/{{this._id}}.png" alt="Card image cap">
-                    <div class="card-body">
-                        <h5 class="card-title">{{this.Name}}</h5>
-                        <h5>₹ {{this.Price}}</h5>
-                        <p class="card-text">{{this.Description}}</p>
-                        <button onclick="addToCart('{{this._id}}')" class="btn btn-primary">Add to Cart</button>
+        <div class="row">
+                {{#each products}}
+                <div class="m-1">
+                    <div class="card bg-light border-dark" style="width: 15rem; Height: 25rem; text-align:center; border-radius:10px; overflow:hidden">
+                        <div class="card-header">
+                            <h5 class="card-title">{{this.Name}}</h5>
+                        </div>
+                        <img class="card-img-top" style="Height: 12rem; " src="/product-images/{{this._id}}.png" alt="Card image cap">
+                        <div class="card-body">
+                            <h5>₹ {{this.Price}}</h5>
+                            <p class="card-text">{{this.Description}}</p>
+                            <button onclick="addToCart('{{this._id}}')" class="btn btn-warning" style="position:relative; width:100%;">Add to Cart</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            {{/each}}
+                {{/each}}
         </div>
     </div>
 </section>

@@ -94,9 +94,9 @@ router.post('/edit-product/:id',(req,res) => {             //get input data from
   let id=req.params.id;                                    //get id of collection
   productHelpers.updateProduct(id,req.body).then(() => {   //updates edited data
     res.redirect('/admin');                                //then redirects to admin page
-    if(req.files.Image){
-      let image=req.files.Image
-      image.mv('./public/product-images/'+id+'.png')}      //updates the image
+      if(req.files.Image){
+        let image=req.files.Image
+        image.mv('./public/product-images/'+id+'.png')}      //updates the image
   })
 });
 
