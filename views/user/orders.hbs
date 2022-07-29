@@ -3,7 +3,7 @@
     <div class="container">
         <div class="row">
             <div class="mt-4 col-md-12">
-                <table class="table table-bordered">
+                <table class="table table-bordered" id="all-orders">
                     <thead>
                         <tr class="table-info">
                         <th scope="col">Date</th>
@@ -13,7 +13,7 @@
                         <th scope="col">Total Price</th>
                         <th scope="col">Payment Method</th>
                         <th scope="col">status</th>
-                        <th> </th>
+                        <th scope="col">Details</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -37,3 +37,8 @@
         </div>
     </div>
 </section>
+<script>
+    $(document).ready( function () {
+    $('#all-orders').DataTable();
+} );
+</script>

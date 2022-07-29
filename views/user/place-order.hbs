@@ -3,7 +3,7 @@
     <div class="container">
         <form action="/place-order" id="checkout-form">
             <div class="row">
-                <div class="col-md-6 m-3 p-2" style="background-color:#DFF6FF; border:1px solid black; border-radius:10px;">
+                <div class="col-md-6 m-3 p-4 del-detail">
                     <h3>Enter Delivery Details</h3><hr>
                     <div class="">
                         <label for="">Address</label>
@@ -17,22 +17,22 @@
                         <input type="text" name="userId" id="" value="{{user._id}}" hidden>
                     </div>
                 </div>
-                <div class=" col-md-4">
-                    <div class="container mt-5 ml-auto checkout">
-                        <div  class="pb-5 pt-3 pl-4 pr-4" style="border:1px solid black; height:fit-content; width:fit-content; background-color:#DFF6FF; border-radius:10px;">
-                        <h4>Total amount: ₹{{total}}</h4>
-                        <hr style="height: 2px; background: black; margin-right: 2rem;">
-                        <div class="payment" style="padding-bottom:1rem;">
-                            <h5>Select Payment Method:</h5>
-                            <label class="radio-inline">
-                            <input type="radio" name="payment-method" value="COD">
-                            COD</label>
-                            <br>
-                            <label class="radio-inline">
-                            <input type="radio" name="payment-method" value="ONLINE">
-                            Online Payment</label>
-                            <br>
-                            <button type="submit" class="btn btn-primary mt-1 float-right">Checkout</button>
+                <div class=" col-md-4 mt-5">
+                    <div class="container mt-5 ml-auto checkout" style="width:fit-content;">
+                        <div  class="pb-5 pt-3 pl-4 pr-4 place-order">
+                            <h4>Total amount: ₹{{total}}</h4>
+                            <div class="payment" style="padding-bottom:1rem;">
+                                <hr style="height: 2px; background: black;">
+                                <h5>Select Payment Method:</h5>
+                                <label class="radio-inline">
+                                <input type="radio" name="payment-method" value="COD">
+                                COD</label>
+                                <br>
+                                <label class="radio-inline">
+                                <input type="radio" name="payment-method" value="ONLINE">
+                                Online Payment</label>
+                                <br>
+                                <button type="submit" class="btn btn-primary mt-1 float-right">Checkout</button>
                             </div>
                         </div>
                     </div>

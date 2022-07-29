@@ -192,6 +192,7 @@ module.exports = {
                 }
             ]).toArray()
             total=total[0].total;
+            console.log("Total:***"+total);
                resolve(total); 
         })
     },

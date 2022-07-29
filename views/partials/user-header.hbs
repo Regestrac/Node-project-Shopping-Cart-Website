@@ -1,26 +1,26 @@
 {{!-- Shows the user page --}}
 <header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/">Shopping Cart</a>
+        <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand hd-txt" href="/">Shopping Cart</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
             <li class="nav-item active">
-                <a class="nav-link" href="/">Products </a> <!-- refreshes or goes to home page -->
+                <a class="nav-link hd-txt" href="/">Products </a> <!-- refreshes or goes to home page -->
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/cart">Cart <span class="badge badge-success" id="cart-count">{{cartCount}}</span></a>
+                <a class="nav-link hd-txt" href="/cart">Cart <span class="badge badge-danger" id="cart-count">{{cartCount}}</span></a>
             </li>
             {{#if user}}
             <li class="nav-item">
-                <a class="nav-link" href="/orders">Orders</a>
+                <a class="nav-link hd-txt" href="/orders">Orders</a>
             </li>
             {{/if}}
             </ul>
             <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
+                <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
                     {{#if user}}
                         {{user.Name}}       <!-- User name shown on dropdown button if logged in  -->
                     {{else}}

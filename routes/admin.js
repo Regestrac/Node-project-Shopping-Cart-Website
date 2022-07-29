@@ -81,7 +81,7 @@ router.get('/delete-product/',verifyAdminLogin, (req,res) => {
   let proId = req.query.id           //get id of collection
   console.log(proId);
   productHelpers.deleteProduct(proId).then((response) => {    //send id of collection to be deleted to deleteProduct in product-helpers.js
-    res.redirect('/admin/')
+    res.redirect('/admin/view-products')
   })
 });
 /* To edit and change the details of product from adminb pannel */
@@ -93,7 +93,7 @@ router.get('/edit-product/:id',verifyAdminLogin, async(req,res) => {
 router.post('/edit-product/:id',(req,res) => {             //get input data from edit page
   let id=req.params.id;                                    //get id of collection
   productHelpers.updateProduct(id,req.body).then(() => {   //updates edited data
-    res.redirect('/admin');                                //then redirects to admin page
+    res.redirect('/admin/view-products');                                //then redirects to admin page
       if(req.files.Image){
         let image=req.files.Image
         image.mv('./public/product-images/'+id+'.png')}      //updates the image

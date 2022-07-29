@@ -4,10 +4,10 @@
         <div class="row">
             {{#each products}}
             <div class="col-md-3 p-3 mt-3">
-                <div class="card" style="width:15rem; height:25rem;">
+                <div class="card bg-light border-dark">
+                    <div class="card-header"><h5 class="cart-title">{{this.order.Name}}</h5></div>
                     <img class="card-img-top" src="/product-images/{{this.order._id}}.png" alt="Image" style="height:12rem;">
                     <div class="card-body">
-                        <h5 class="cart-title">{{this.order.Name}}</h5>
                         <p class="card-text">₹ {{this.order.Price}}</p>
                         <p class="card-text">Quantity: {{this.quantity}}</p>
                         <p class="card-text">{{this.order.Description}}</p>
