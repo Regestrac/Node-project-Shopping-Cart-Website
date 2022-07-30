@@ -23,5 +23,11 @@ header{
     color: #fff;
 }
 .hd-txt:hover{
-    color:#000;
+    color:#00ffff;
+}
+.cart-item-count{
+    height:1.7rem;
+    width:1.7rem;
+    font-weight: 900;
+    background-color: #bbb;
 }

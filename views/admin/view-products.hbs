@@ -19,7 +19,7 @@
             <tbody class="table-primary" style="font-weight:bold;">
                 {{#each products}}
                 <tr>
-                    <th scope="row">{{@index}}</th>
+                    <th>{{@index}}</th>
                     <td>{{this.Name}}</td>
                     <td>{{this.Price}}</td>
                     <td>{{this.Category}}</td>
@@ -37,6 +37,6 @@
 </section>
 <script>
     $(document).ready( function () {
-    $('#view-products').DataTable();
-} );
+        $('#view-products').DataTable();
+    } );
 </script>

@@ -21,7 +21,7 @@
                     
                     <label for="">Image</label>
                     <img src="/product-images/{{product._id}}.png" alt="Image" style="width: 100px; height: auto;" id="imgview" class="p-2">    <!-- Shows preview of current image -->
-                    <input type="file" name="Image" class="form-control" onchange="viewImage(event)">     <!-- Change image preview on selecting new image -->
+                    <input type="file" name="Image" class="form-control" onchange="viewImage(event)" required>     <!-- Change image preview on selecting new image -->
                     
                     <button type="submit" class="btn btn-success mt-4">Submit</button>
                 </form>

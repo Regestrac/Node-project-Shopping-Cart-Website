@@ -192,7 +192,6 @@ module.exports = {
                 }
             ]).toArray()
             total=total[0].total;
-            console.log("Total:***"+total);
                resolve(total); 
         })
     },
@@ -223,7 +222,7 @@ module.exports = {
     getCartProductList: (userId) => {   /* Helps to get the details of cart products from database */
         return new Promise(async (resolve, reject) => {
             let cart = await db.get().collection(collection.CART_COLLECTION).findOne({ user: objectId(userId) })
-            resolve(cart.products);
+                resolve(cart.products);
         })
     },
     getUserOrder: (userId) => {        /* Get the order histoy deatials from order collection */
@@ -270,12 +269,11 @@ module.exports = {
             var options = {
                 amount: total * 100,
                 currency: "INR",
-                receipt: "" + orderId,
+                receipt: orderId,
             };
-            instance.orders.create(options, function (err, orders) {
-                console.log("New Order:");
+            instance.orders.create(options, function(err, orders){
                 console.log(orders);
-                resolve(orders)
+                resolve(orders);
             });
         })
     },
@@ -285,7 +283,6 @@ module.exports = {
             let hmac = crypto.createHmac('sha256', 'c4uOVdWCG0kr3P9OZbYi6DRP');     //creating hmac object with sha256 algorithm
             hmac.update(details['payment[razorpay_order_id]'] + '|' + details['payment[razorpay_payment_id]']);     //updating it
             hmac = hmac.digest('hex');                                              //converting the hash to hex format
-            console.log(hmac);
             if (hmac == details['payment[razorpay_signature]']) {           //comparing it with razorpay signature with above hex
                 resolve();                           //resolves the payment as success if it matches
             } else {
