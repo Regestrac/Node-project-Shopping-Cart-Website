@@ -3,7 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var hbs = require('express-handlebars')
+var exhbs = require('express-handlebars')
 var userRouter = require('./routes/user');
 var adminRouter = require('./routes/admin');
 var fileUpload = require('express-fileupload'); 
@@ -24,7 +24,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // engine setup to view the layouts from layout and partials folder
-app.engine('hbs', hbs.engine({extname:'hbs', defaultLayout: 'layout', layoutsDir:__dirname + '/views/layout', partialsDir:__dirname + '/views/partials/'}));
+app.engine('hbs', exhbs.engine({extname:'hbs', defaultLayout: 'layout', layoutsDir:__dirname + '/views/layout', partialsDir:__dirname + '/views/partials/'}));
 
 app.use(fileUpload({limits: { fileSize: 50 * 1024 * 1024 },})); //middleware for uploading files with or without limited size
 app.use(session({secret:"Key",cookie:{maxAge:600000}}));        // Setting timed cookie sessions
